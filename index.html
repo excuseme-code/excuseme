@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Romantic Experience</title>
+<style>
+body, html {
+  margin:0; padding:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#ffe6f0; overflow:hidden;
+}
+.container{
+  position:relative; width:100%; height:100vh;
+  display:flex; justify-content:center; align-items:center; overflow:hidden;
+}
+.slide{
+  position:absolute; width:100%; height:100%;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; padding:5vw;
+  transition:opacity 1s ease;
+  opacity:0; pointer-events:none;
+}
+.active{opacity:1; pointer-events:auto;}
+#poetry,#proposal,#certificateText,#finalPoetry{
+  font-size:5vw; color:#b30059; margin:5vw 0; cursor:pointer;
+}
+button{
+  padding:3vw 6vw; background:#ff3366; color:white; border:none; border-radius:2vw;
+  margin-top:4vw; cursor:pointer; font-size:4vw;
+}
+button:hover{background:#ff1a4d;}
+.grid{
+  display:grid; grid-template-columns:repeat(3,25vw); grid-gap:3vw; margin-top:5vw;
+}
+.cell{
+  width:25vw; height:25vw; background:#fff0f6; display:flex; justify-content:center; align-items:center;
+  font-size:10vw; border-radius:2vw; cursor:pointer; transition:0.2s; position:relative;
+}
+.cell:hover{transform:scale(1.1); background:#ffc0d9;}
+.heart{
+  position:absolute; font-size:5vw; pointer-events:none;
+  animation:floatUp linear infinite; color:red;
+}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);}100%{transform:translateY(-100vh) rotate(360deg);}}
+.confetti{
+  position:absolute; width:2vw; height:2vw; background:red;
+  animation:confettiFall 1s ease-out forwards; border-radius:50%;
+}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);}100%{transform:translateY(15vh) rotate(360deg);opacity:0;}}
+#certificate{
+  background:#fff0f6; padding:10vw; border-radius:5vw;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3); max-width:90vw;
+  text-align:center; position:relative; overflow:hidden;
+}
+#certificate h2{position:relative; z-index:2; font-size:7vw;}
+#certificateText{position:relative; z-index:2; font-size:5vw;}
+.sparkle{
+  position:absolute; width:2vw; height:2vw;
+  background:linear-gradient(to right,#ff6699,#ff1a4d);
+  border-radius:50%; animation:sparkleAnim 2s linear infinite;
+}
+@keyframes sparkleAnim{0%{opacity:1;}50%{opacity:0.3;}100%{opacity:1;}}
+.optionBtn{
+  margin:3vw; background:#ff6699; padding:3vw 6vw; border-radius:2vw; font-size:4vw;
+}
+.optionBtn:hover{background:#ff3366;}
+
+/* Media queries for larger screens */
+@media (min-width: 768px){
+  #poetry,#proposal,#certificateText,#finalPoetry{font-size:2em;}
+  button{padding:12px 25px; font-size:1.2em;}
+  .cell{width:100px; height:100px; font-size:50px;}
+  .optionBtn{padding:12px 20px; font-size:1em;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Slide 1: Poetry -->
+<div class="slide active" id="slide1">
+  <div id="poetry">Click here to read poetry ❤️</div>
+  <button id="playMusic">Play My Love Song 🎵</button>
+  <button id="poetryNext" style="display:none;">Next</button>
+</div>
+
+<!-- Slide 2: Tic-Tac-Toe -->
+<div class="slide" id="slide2">
+  <h2>Cross & Zero ❤️💔</h2>
+  <div class="grid" id="board">
+    <div class="cell">💔</div><div class="cell">💖</div><div class="cell">💔</div>
+    <div class="cell">💔</div><div class="cell">💖</div><div class="cell"></div>
+    <div class="cell">💔</div><div class="cell"></div><div class="cell">💔</div>
+  </div>
+</div>
+
+<!-- Slide 3: Proposal -->
+<div class="slide" id="slide3">
+  <div id="proposal">Will you be mine forever? ❤️</div>
+  <div>
+    <button class="optionBtn" id="yesBtn">Yes</button>
+    <button class="optionBtn" id="absolutelyBtn">Absolutely</button>
+  </div>
+</div>
+
+<!-- Slide 4: Certificate -->
+<div class="slide" id="slide4">
+  <div id="certificate">
+    <h2>Certificate of Admiration</h2>
+    <p id="certificateText">You are amazing, wonderful, and truly admired! 💖</p>
+    <p>Your Admirer,<br>Excuse Me</p>
+  </div>
+</div>
+
+<!-- Slide 5: Final Poetry & Redirect -->
+<div class="slide" id="slide5">
+  <div id="finalPoetry">
+    This one poetry is for youu 💖
+  </div>
+  <p style="font-size:4vw; color:#ff3366; margin-top:3vw;">Click here to see something special 🌹</p>
+</div>
+
+<audio id="music" src="your_song.mp3" loop></audio>
+
+</div>
+
+<script>
+// Slide control
+let slides = document.querySelectorAll('.slide');
+function showSlide(n){
+  slides.forEach(s=>s.classList.remove('active'));
+  slides[n].classList.add('active');
+}
+
+// Falling hearts animation
+function createHeart(){
+  const heart=document.createElement('div');
+  heart.classList.add('heart');
+  heart.style.left=Math.random()*100+'vw';
+  heart.style.animationDuration=(5+Math.random()*5)+'s';
+  heart.textContent='❤️';
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),10000);
+}
+setInterval(createHeart,500);
+
+// Poetry slide
+const poems=[
+  "I can love you for four days,",
+  "Spring, Summer, Autumn, Winter",
+  "Maybe Three Days.",
+  "Yesterday, Today, Tomorrow.",
+  "How About Two Days?",
+  "Day and Night.",
+  "No, One day is enough.",
+  "Everyday."
+];
+let pIndex=0;
+const poetryDiv=document.getElementById('poetry');
+const poetryNext=document.getElementById('poetryNext');
+poetryDiv.addEventListener('click',()=>{
+  if(pIndex<poems.length){
+    poetryDiv.textContent=poems[pIndex];
+    pIndex++;
+  }
+  if(pIndex>=poems.length){
+    poetryNext.style.display='inline-block';
+  }
+});
+poetryNext.addEventListener('click',()=>showSlide(1));
+
+// Music
+document.getElementById('playMusic').addEventListener('click',()=>{
+  document.getElementById('music').play();
+  document.getElementById('playMusic').style.display='none';
+});
+
+// Tic-Tac-Toe
+const cells=document.querySelectorAll('#board .cell');
+const midCol=[1,4,7];
+cells.forEach((cell,index)=>{
+  cell.addEventListener('click',()=>{
+    if(cell.textContent===''){
+      cell.textContent='💖';
+      cell.style.transform='scale(1.3)';
+      setTimeout(()=>cell.style.transform='scale(1)',300);
+      for(let i=0;i<3;i++){
+        const c=document.createElement('div');
+        c.className='confetti';
+        c.style.left=(cell.offsetLeft+Math.random()*cell.offsetWidth)+'px';
+        c.style.top=(cell.offsetTop+Math.random()*cell.offsetHeight)+'px';
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),1000);
+      }
+      if(midCol.every(i=>cells[i].textContent==='💖')){
+        setTimeout(()=>showSlide(2),1200);
+      }
+    }
+  });
+});
+
+// Proposal
+const yesBtn=document.getElementById('yesBtn');
+const absolutelyBtn=document.getElementById('absolutelyBtn');
+function loveAccepted(){
+  for(let i=0;i<10;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=(Math.random()*window.innerWidth)+'px';
+    c.style.top=(Math.random()*window.innerHeight)+'px';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1000);
+  }
+  setTimeout(()=>showSlide(3),1000);
+}
+yesBtn.addEventListener('click',loveAccepted);
+absolutelyBtn.addEventListener('click',loveAccepted);
+
+// Certificate sparkle
+const cert=document.getElementById('certificate');
+function addSparkle(){
+  for(let i=0;i<20;i++){
+    const s=document.createElement('div');
+    s.className='sparkle';
+    s.style.left=Math.random()*cert.offsetWidth+'px';
+    s.style.top=Math.random()*cert.offsetHeight+'px';
+    cert.appendChild(s);
+    setTimeout(()=>s.remove(),3000);
+  }
+}
+setInterval(addSparkle,1000);
+
+// Move to final poetry slide after certificate
+setTimeout(()=>showSlide(4),4000); // show certificate 4 sec then final
+setTimeout(()=>showSlide(5),8000); // final poetry slide after 8 sec
+
+// Final poetry click redirect
+document.getElementById('finalPoetry').addEventListener('click',()=>{
+    window.location.href = "https://www.instagram.com/reel/DQFG3Z1gf4I/?igsh=NzNlanBnMGhybXM2";
+});
+
+// Hearts on final slide
+let finalHeartInterval = setInterval(() => {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (4 + Math.random() * 4) + 's';
+    heart.textContent = '💖';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 8000);
+}, 500);
+</script>
+</body>
+</html>
